@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --color-background: oklch(0.985 0.004 180);
+  --color-foreground: oklch(0.22 0.03 220);
+  --color-card: oklch(1 0 0);
+  --color-muted: oklch(0.955 0.008 190);
+  --color-muted-foreground: oklch(0.5 0.02 220);
+  --color-border: oklch(0.91 0.01 200);
+  --color-primary: oklch(0.47 0.09 190);
+  --color-primary-foreground: oklch(0.99 0 0);
+  --color-accent: oklch(0.94 0.03 185);
+  --color-accent-foreground: oklch(0.32 0.07 190);
+  --color-destructive: oklch(0.56 0.2 25);
+  --color-destructive-foreground: oklch(0.99 0 0);
+  --color-ring: oklch(0.6 0.09 190);
+  --radius-lg: 0.625rem;
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body { background: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); }
+}
+
+.prose-clinical p { margin: 0.25rem 0; }
+.prose-clinical ul { list-style: disc; padding-left: 1.25rem; }
+.prose-clinical ol { list-style: decimal; padding-left: 1.25rem; }
+.prose-clinical h2 { font-size: 1.1rem; font-weight: 600; margin-top: .5rem; }
+.prose-clinical h3 { font-weight: 600; margin-top: .5rem; }
+.prose-clinical blockquote { border-left: 3px solid var(--color-border); padding-left: .75rem; color: var(--color-muted-foreground); }
+.ProseMirror { outline: none; min-height: 8rem; }
+.ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--color-muted-foreground); float: left; height: 0; pointer-events: none; }
+
+@media print {
+  @page { size: A4; margin: 14mm; }
+  body { background: white; }
+  .no-print { display: none !important; }
+  .print-sheet { box-shadow: none !important; border: none !important; padding: 0 !important; max-width: none !important; }
+  .print-avoid-break { break-inside: avoid; }
+}

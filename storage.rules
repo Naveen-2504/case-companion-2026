@@ -1,0 +1,7 @@
+rules_version = '2';
+// Files are served via short-lived signed URLs from the API. Block direct client access.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} { allow read, write: if false; }
+  }
+}

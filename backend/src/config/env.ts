@@ -8,7 +8,7 @@ const schema = z.object({
   FIREBASE_PROJECT_ID: z.string().optional(),
   FIREBASE_CLIENT_EMAIL: z.string().optional(),
   FIREBASE_PRIVATE_KEY: z.string().optional(),
-  FIREBASE_STORAGE_BUCKET: z.string().min(1, "FIREBASE_STORAGE_BUCKET is required"),
+  FIREBASE_STORAGE_BUCKET: z.string().optional(),
   MAX_FILE_SIZE_MB: z.coerce.number().positive().default(10),
   MAX_DOCUMENTS: z.coerce.number().int().positive().default(4),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(15 * 60 * 1000),

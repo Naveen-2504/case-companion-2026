@@ -14,6 +14,7 @@ export const caseFormSchema = z.object({
   chiefComplaint: z.string().max(50000),
   history: z.string().max(100000),
   prescription: z.string().max(50000),
+  treatment: z.string().max(50000),
 });
 export type CaseFormValues = z.infer<typeof caseFormSchema>;
 

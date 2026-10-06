@@ -47,7 +47,7 @@ export default function CasePrint() {
             <tr><td className="py-1 text-muted-foreground">Address</td><td colSpan={3}>{c.address || "—"}</td></tr>
           </tbody>
         </table>
-        {([["Chief complaint", c.chiefComplaint], ["History", c.history], ["Prescription", c.prescription]] as const).map(([t, h]) => (
+        {([["Chief complaint", c.chiefComplaint], ["History", c.history], ["Prescription", c.prescription], ["Treatment", c.treatment]] as const).map(([t, h]) => (
           <section key={t} className="print-avoid-break mt-5">
             <h2 className="mb-1 border-b pb-1 font-semibold uppercase tracking-wide text-xs">{t}</h2>
             {isHtmlEmpty(h) ? <p className="text-muted-foreground">—</p> : <div className="prose-clinical" dangerouslySetInnerHTML={safeHtml(h)} />}

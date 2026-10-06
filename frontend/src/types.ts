@@ -10,6 +10,7 @@ export interface CaseDocument {
 }
 
 export interface PatientCase {
+  treatment: string;
   id: string;
   caseNumber: number;
   caseNumberDisplay: string;

@@ -10,6 +10,7 @@ export const caseInputSchema = z.object({
   chiefComplaint: z.string().max(50_000).default(""),
   history: z.string().max(100_000).default(""),
   prescription: z.string().max(50_000).default(""),
+  treatment: z.string().max(50_000).default(""),
 }).strict();
 
 export type CaseInput = z.infer<typeof caseInputSchema>;

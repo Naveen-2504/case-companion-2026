@@ -22,6 +22,7 @@ function clean(input: CaseInput) {
     chiefComplaint: cleanHtml(input.chiefComplaint),
     history: cleanHtml(input.history),
     prescription: cleanHtml(input.prescription),
+    treatment: cleanHtml(input.treatment),
   };
 }
 
@@ -29,7 +30,7 @@ async function serialize(snap: FirebaseFirestore.DocumentSnapshot, withUrls = fa
   const d = snap.data()!;
   const docs: (DocumentMeta | null)[] = d.documents ?? [null, null, null, null];
   const documents = await Promise.all(
-    docs.map(async (m) => (m ? { ...m, url: withUrls ? await signedUrl(m.path) : null } : null)),
+    docs.map(async (m) => (m ? { ...m, url: withUrls ? await signedUrl(m?.path || "") : null } : null)),
   );
   return {
     id: snap.id,

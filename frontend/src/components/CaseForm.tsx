@@ -44,6 +44,7 @@ export function CaseForm({ existing }: { existing?: PatientCase }) {
       chiefComplaint: existing?.chiefComplaint ?? "",
       history: existing?.history ?? "",
       prescription: existing?.prescription ?? "",
+      treatment: existing?.treatment ?? "",
     },
   });
 
@@ -78,8 +79,9 @@ export function CaseForm({ existing }: { existing?: PatientCase }) {
     }
   };
 
-  const richFields: { name: "chiefComplaint" | "history" | "prescription"; label: string }[] = [
+  const richFields: { name: "chiefComplaint" | "treatment" | "history" | "prescription"; label: string }[] = [
     { name: "chiefComplaint", label: "Chief complaint" },
+    { name: "treatment", label: "Treatment" },
     { name: "history", label: "History" },
     { name: "prescription", label: "Prescription" },
   ];

@@ -19,13 +19,17 @@ export const casesApi = {
   update: (id: string, v: CaseFormValues) => http.put<PatientCase>(`/cases/${id}`, v).then((r) => r.data),
   remove: (id: string) => http.delete(`/cases/${id}`),
   uploadDoc: (id: string, slot: number, file: File, onProgress?: (pct: number) => void) => {
-    const fd = new FormData();
-    fd.append("file", file);
-    return http
-      .post<PatientCase>(`/cases/${id}/documents/${slot}`, fd, {
-        onUploadProgress: (e) => e.total && onProgress?.(Math.round((e.loaded / e.total) * 100)),
-      })
-      .then((r) => r.data);
-  },
+  const fd = new FormData();
+  fd.append("file", file);
+
+  return http
+    .post<PatientCase>(`/cases/${id}/documents/${slot}`, fd, {
+      onUploadProgress: (e) =>
+        e.total && onProgress?.(
+          Math.round((e.loaded / e.total) * 100)
+        ),
+    })
+    .then((r) => r.data);
+},
   removeDoc: (id: string, slot: number) => http.delete<PatientCase>(`/cases/${id}/documents/${slot}`).then((r) => r.data),
 };

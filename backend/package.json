@@ -4,7 +4,7 @@
   "private": true,
   "main": "lib/functions.js",
   "engines": {
-    "node": "20"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",

@@ -1,30 +1,38 @@
+import "dotenv/config";
 import admin from "firebase-admin";
-import { env } from "./env";
 
-/**
- * Initializes the Admin SDK once.
- * - If FIREBASE_PRIVATE_KEY + FIREBASE_CLIENT_EMAIL are set: explicit service-account credentials.
- * - Otherwise: Application Default Credentials (automatic on Cloud Functions / Cloud Run).
- */
-function init() {
-  if (admin.apps.length) return admin.app();
-  const key = env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  const hasCert = key && !key.includes("REPLACE_ME") && env.FIREBASE_CLIENT_EMAIL && env.FIREBASE_PROJECT_ID;
-  return admin.initializeApp({
-    credential: hasCert
-      ? admin.credential.cert({
-          projectId: env.FIREBASE_PROJECT_ID,
-          clientEmail: env.FIREBASE_CLIENT_EMAIL,
-          privateKey: key,
-        })
-      : admin.credential.applicationDefault(),
-    projectId: env.FIREBASE_PROJECT_ID,
-    storageBucket: env.FIREBASE_STORAGE_BUCKET,
+const projectId = process.env.FIREBASE_PROJECT_ID || "case-documentation-kb";
+const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || "firebase-adminsdk-fbsvc@case-documentation-kb.iam.gserviceaccount.com";
+const privateKey = process.env.FIREBASE_PRIVATE_KEY || "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC41zng0+u5aTE3\nzCYuWxyXha3aMAAy4jsrSoL8SBT9ZG75xf2zPR7YrOpXKEBsRLNjEkkzp+FuKIuO\no6Nwei7ePmmQ09XXEmRHB9l9yDuIdJ+toip/DCKfd4q1RC953u+OWTAhQGa2tZl+\nKW3BCHVZXTzMOIF2c5qMZiKejAyepaf9O5cGB7rnmYHKGBjkKPVHDns9+350oMpH\nSJIxuDVxDrZ+JDo5ALZpp15teEtojUJZYnBo47J7R6vNt8S9MOJTtoI4d4vgImAW\nCKPbfEJ+EH/4rGGgDqhvCZeBz7uKvrDscRJrXkj7kT6YZqRj8z50kQG37SKgXw1s\nue41RmkjAgMBAAECggEAI58mwlNU/FhvacdoHErmybSzencBssyyhndHowLpOKQg\nVvZ3HBHNXgiE6OMS90qOH6uoe9IAudAKhSS4HLcPTTlN8uFANsCOnrm+imUKRBPl\nqfq0oeNe0Mii7KgFVkFGfXJmuiHFKbT5rbyiMC9HHj+/tcO1/3Pr9t7AEToAPJpw\nLADkTG79e1Dn90itIHl5PxUORUuiL0TkNO1YIMCSLi/twO5CCj+vZcmQhibte0Ea\n/b6mWYnBxN+AQyamu44HwGL0JvbjiraR2KFcPVp7NgniNA+ab2+EkUmZ5kS/cOnF\njCnMrToAQLGx77n2ct0QbHUcJZ/nfU1YdyrbJPwXoQKBgQDoeP2fUjn8et3rmaA3\nevAjXdPQ6NIrvIdkvPBqRBti8zIsRCf58ixRpw3P3JWQ3h9GJMY62K0mTC0o2A6k\nn+tMBSPvfVH97cEZrMNNiZlDTcmTTa4zstq59v0FeubIiTHf+UJR0rMu3tQZPCRI\nyxTvZNBz1PuEKmpjfFGlR14emQKBgQDLjCqAxr/hpXqJfzisPeouXi0jfqy39zx5\nFWZx0+WmnR1H7cXekaDqwBEjjOIrJxlBRAWlz3No5x9Fpv9kvd6X1sRsqsnjC4Lz\nfGFppGiE1UlkdcUXXb0IRoxdKuUannMbA9ENEk90ihJtC0P5zUD+ZloFN3chQPSB\noi6XqHsHGwKBgQDXGhySrqK423c76Io2y6onD0pOox7VGTyuGaTaruooRJ7IFshm\nnY4kf05oZtJ9mQmW/a/uA08zgIjIoiHqcY5maNs3Xd3f934VI6YSuJ73h6JciiQF\n8hgwujikOXQRWeCsPRcAXtUtKUFXmC56rG5SlBXNF+UiBZ0rMHzbUY3lAQKBgQCi\nskbG6BY3pq1reeUyx8qHhX9O/9HOui/8GL7p/RVzN+JPvB6M6JpXCW6pm9Kr63Sk\nVlqtTkRRdWvpoLJDNADYHTKkKV91u53QQXsble51PoaLZhdDtgmCs+E+FytJO52F\n2mceq6QW4sYXowmSgh2ROv55bPwr+F93vsq/LkwoQQKBgQCmTNgw6RvDbu2m4IUI\n9WXzMj6gNwZ07J+32TmXJrjem7cipjiwREyeL+QW0mpcjMa9MOCQNTxUMnpnxwoe\n2r70KVomQgXJ0CXmK13FtVkLpJlh4rKH+Tb/SqqWYMhbXTsuAU9WD9uHjosH1kUD\nzoEaIBquD1fJvAZAo/CNKf62lw==\n-----END PRIVATE KEY-----\n";
+
+if (!projectId) {
+  throw new Error("FIREBASE_PROJECT_ID is missing");
+}
+
+if (!clientEmail) {
+  throw new Error("FIREBASE_CLIENT_EMAIL is missing");
+}
+
+if (!privateKey) {
+  throw new Error("FIREBASE_PRIVATE_KEY is missing");
+}
+
+const formattedPrivateKey = privateKey
+  .replace(/\\n/g, "\n")
+  .replace(/^"|"$/g, "")
+  .trim();
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId,
+      clientEmail,
+      privateKey: formattedPrivateKey,
+    }),
   });
 }
 
-const app = init();
-export const db = app.firestore();
-db.settings({ ignoreUndefinedProperties: true });
+export const db = admin.firestore();
 export const FieldValue = admin.firestore.FieldValue;
-export const Timestamp = admin.firestore.Timestamp;
+
+export default admin;
